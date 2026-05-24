@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document_split_table" inherit_id="account.report_invoice_document">
+
+        <!-- Hide the original table if the boolean is checked -->
+        <xpath expr="//table[@name='invoice_line_table']" position="attributes">
+            <attribute name="t-if">not o.split_table_by_section</attribute>
+        </xpath>
+
+        <!-- Hide the standard total block if the boolean is checked -->
+        <xpath expr="//div[@id='right-elements']" position="attributes">
+            <attribute name="t-if">not o.split_table_by_section</attribute>
+        </xpath>
+
+        <!-- Inject our custom split tables after the original table -->
+        <xpath expr="//table[@name='invoice_line_table']" position="after">
+
+            <t t-if="o.split_table_by_section">
+
+                <t t-set="display_discount" t-value="any(l.discount for l in o.invoice_line_ids)"/>
+
+                <!-- Use the filtered lines logic to match your other customizations -->
+                <t t-set="lines" t-value="o.invoice_line_ids.filtered(
+                    lambda l: not l.line_type or l.line_type in ('main_invoice_only', 'both') ).sorted(key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True)"/>
+
+                <!-- 1. Group the lines -->
+                <t t-set="table_groups" t-value="[]"/>
+                <t t-set="current_group" t-value="[]"/>
+
+                <t t-foreach="lines" t-as="line">
+                    <t t-if="line.display_type == 'line_section'">
+                        <t t-if="current_group">
+                            <t t-set="table_groups" t-value="table_groups + [current_group]"/>
+                        </t>
+                        <t t-set="current_group" t-value="[line]"/>
+                    </t>
+                    <t t-else="">
+                        <t t-set="current_group" t-value="current_group + [line]"/>
+                    </t>
+                </t>
+                <!-- Catch the last group -->
+                <t t-if="current_group">
+                    <t t-set="table_groups" t-value="table_groups + [current_group]"/>
+                </t>
+
+                <!-- 2. Iterate over the groups and render a table for each -->
+                <t t-foreach="table_groups" t-as="group">
+                    <t t-set="is_section" t-value="group and group[0].display_type == 'line_section'"/>
+
+                    <h3 t-if="is_section and not group_last" class="mt-4 mb-2">
+                        <span t-field="group[0].name"/>
+                    </h3>
+
+                    <t t-set="group_lines" t-value="group[1:] if is_section else group"/>
+
+                    <table t-if="group_lines" class="o_has_total_table table o_main_table table-borderless mb-4" name="invoice_line_table_split">
+                        <thead t-if="not (is_section and group_last)">
+                            <tr>
+                                <th class="text-start" style="width: 450px;">
+                                    <span>Product</span>
+                                </th>
+                                <th t-if="not (is_section and group_last)" class="text-end">
+                                    <span>Description</span>
+                                </th>
+                                <th t-if="o.quantity_column and not (is_section and group_last)" class="text-end">
+                                    <span>Quantity</span>
+                                </th>
+                                <th t-if="o.unit_price_column and not (is_section and group_last)" class="text-end">
+                                    <span>Unit Price</span>
+                                </th>
+                                <th class="text-end">
+                                    <span>Amount</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="group_lines" t-as="line">
+                                <tr>
+                                    <td style="width: 450px;">
+                                        <span t-field="line.name"/>
+                                    </td>
+                                    <td class="text-end" style="width: 250px;">
+                                        <span t-field="line.description"/>
+                                    </td>
+                                    <td t-if="o.quantity_column" class="text-end">
+                                        <span t-field="line.quantity"/>
+                                    </td>
+                                    <td t-if="o.unit_price_column" class="text-end">
+                                        <span t-field="line.price_unit"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="line.price_subtotal" t-options="{
+                      'widget': 'monetary',
+                      'display_currency': line.product_id.display_currency_id or o.currency_id
+                  }"/>
+
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </t>
+            </t>
+        </xpath>
+    </template>
+</odoo>

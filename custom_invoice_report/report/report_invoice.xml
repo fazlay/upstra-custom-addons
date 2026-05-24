@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document_inherit_custom" inherit_id="account.report_invoice_document">
+        <xpath expr="//td[@name='td_subtotal']" position="replace">
+            <td name="td_subtotal" class="text-end o_price_total">
+                <span class="text-nowrap" t-if="line.display_subtotal_from_line" t-out="line.display_subtotal_from_line.price_subtotal" t-options="{'widget': 'monetary','display_currency':line.display_subtotal_from_line.product_id.display_currency_id or line.product_id.display_currency_id                  }"/>
+                <span class="text-nowrap" t-else="" t-out="line.price_subtotal" t-options="{                       'widget': 'monetary',                       'display_currency': line.product_id.display_currency_id or o.currency_id                   }"/>
+            </td>
+        </xpath>
+        <xpath expr="//span[@t-field='o.invoice_number']" position="after">
+            <div t-if="o.show_bin" style="font-size:14px">BIN - 0010126030203</div>
+        </xpath>
+        <xpath expr="//p[contains(@t-if, 'o.company_id.id == 1')]" position="replace">
+            <p t-if="o.show_exchange_rate">
+        USD Exchange Rate: <span t-esc="o.bdt_rate"/>
+            </p>
+        </xpath>
+        <!-- <xpath expr="//tr[td[contains(text(), 'Total (BDT):')]]" position="replace"/> -->
+        <!-- <xpath expr="//td[@name='td_subtotal']" position="replace">
+            <td name="td_subtotal" class="text-end o_price_total">
+                <span class="text-nowrap" t-if="line.display_subtotal_from_line" t-out="line.display_subtotal_from_line.price_subtotal" t-options="{
+                      'widget': 'monetary',
+                      'display_currency': line.product_id.display_currency_id or o.currency_id
+                  }"/>
+                <span class="text-nowrap" t-else="" t-out="line.price_subtotal" t-options="{
+                      'widget': 'monetary',
+                      'display_currency': line.product_id.display_currency_id or o.currency_id
+                  }"/>
+            </td>
+        </xpath> -->
+
+    </template>
+    <template id="remove_bdt_rows_if_exist" inherit_id="account.report_invoice_document" name="Remove BDT Rows" priority="100">
+        <!-- Use groups INSIDE the view, not on the template -->
+        <xpath expr="//tr[td[contains(text(), 'Total (BDT):')]]" position="replace" groups="base.group_no_one"/>
+        <!-- <xpath expr="//tr[@t-if='Flase']" position="replace" groups="base.group_no_one"/> -->
+    </template>
+    <!-- <template id="report_invoice_document_inherit_custom" inherit_id="account.report_invoice_document">
+
+        <xpath expr="//td[@name='td_subtotal']" position="replace">
+            <td name="td_subtotal" class="text-end o_price_total">
+                <span class="text-nowrap" t-out="line.price_subtotal" t-options="{
+                      'widget': 'monetary',
+                      'display_currency': line.product_id.display_currency_id or o.currency_id
+                  }">
+                </span>
+            </td>
+        </xpath>
+    </template> -->
+    <template id="invoice_upstra_custom_tax_totals" inherit_id="account.document_tax_totals_template" priority="10">
+        <!-- <xpath expr="//t[contains(@t-foreach, 'tax_groups')]" position="replace"></xpath>
+        <xpath expr="//t[contains(@t-foreach, 'tax_groups')]" position="replace"></xpath>
+        <xpath expr="//tr[hasclass('o_subtotal')]/td[1]/span[text()='Untaxed Amount']" position="replace">
+
+        </xpath> -->
+        <!-- <xpath expr="//tr[hasclass('o_subtotal')]" position="replace"/>
+        <xpath expr="//tr[hasclass('o_total')]" position="replace"> -->
+
+        <xpath expr="." position="replace">
+            <tr class="o_total">
+                <td class="text-end">
+
+                    <t t-if="o.use_custom_total ">
+                        <strong>Total Amount</strong>
+                    </t>
+
+                    <t t-else="">
+                        <t t-if="o.bdt_rate &lt; 1">
+                            <strong>Total (BDT):</strong>
+                        </t>
+                        <t t-else="">
+                            <strong>Total (USD):</strong>
+                        </t>
+                    </t>
+                </td>
+                <td class="text-end">
+                    <t t-if="o.use_custom_total">
+                        <t t-set="bdt_currency" t-value="env['res.currency'].search([('name', '=', 'BDT')], limit=1)"/>
+                        <strong t-out="o.custom_total" t-options='{"widget": "monetary", "display_currency": bdt_currency}'/>
+                    </t>
+                    <t t-else="">
+                        <strong t-out="tax_totals['total_amount_currency']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                    </t>
+                </td>
+            </tr>
+        </xpath>
+    </template>
+</odoo>

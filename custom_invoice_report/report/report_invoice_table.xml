@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document_inherit_custom_table" inherit_id="account.report_invoice_document">
+
+        <!-- XPath 1: Filter main invoice table lines -->
+        <xpath expr="//t[@t-set='lines']" position="replace">
+            <t t-set="lines" t-value="o.invoice_line_ids.filtered(
+                lambda l: not l.line_type or l.line_type in ('main_invoice_only', 'both') ).sorted(key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True)"/>
+        </xpath>
+
+        <!-- XPath 2: Inject breakdown AFTER the entire invoice_main block -->
+        <xpath expr="//div[hasclass('clearfix') and hasclass('invoice_main')]" position="after">
+
+            <t t-set="breakdown_lines" t-value="o.invoice_line_ids.filtered(
+                lambda l: l.line_type in ('breakdown', 'both') ).sorted(key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True)"/>
+
+            <!-- just change this one line -->
+            <div t-if="breakdown_lines and o.print_breakdown" style="page-break-before: always;">
+                <div class="page mb-4">
+                    <h3>Invoice Breakdown</h3>
+                    <table class="o_has_total_table table o_main_table table-borderless mb-0">
+                        <thead>
+                            <tr>
+                                <th style="width: 450px;" class="text-start">
+                                    <span>Product</span>
+                                </th>
+                                <th class="text-center">
+                                    <span>Description</span>
+                                </th >
+                                <th class="text-center" t-if="o.quantity_column">
+                                    <span>Quantity</span>
+                                </th>
+                                <th class="text-center" t-if="o.unit_price_column">
+                                    <span>Unit Price</span>
+                                </th>
+                                <th class="text-end">
+                                    <span>Amount</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="breakdown_lines" t-as="line">
+                                <tr>
+                                    <td style="width: 450px;">
+                                        <span t-field="line.name"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="line.description"/>
+                                    </td>
+                                    <td t-if="o.quantity_column" class="text-end">
+                                        <span t-field="line.quantity"/>
+                                    </td>
+                                    <td t-if="o.unit_price_column" class="text-end">
+                                        <span t-field="line.price_unit"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="line.price_subtotal" t-options="{
+                      'widget': 'monetary',
+                      'display_currency': line.product_id.display_currency_id or o.currency_id
+                  }"/>
+
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+                    <!-- Separate Total Table - styled like right-elements -->
+                    <div t-if="not o.split_table_by_section" class="overflow-hidden">
+                        <div class="col-6 d-inline-block float-end">
+                            <table class="o_total_table table table-borderless avoid-page-break-inside">
+                                <tbody>
+                                    <tr class="fw-bold total">
+                                        <td class="text-end">
+                                            Total (BDT):
+                                        </td>
+                                        <td class="text-end">
+                                            <t t-if="o.use_custom_total">
+                                                <t t-set="bdt_currency" t-value="env['res.currency'].search([('name', '=', 'BDT')], limit=1)"/>
+                                                <strong t-out="o.custom_total" t-options='{"widget": "monetary", "display_currency": bdt_currency}'/>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </xpath>
+
+    </template>
+</odoo>

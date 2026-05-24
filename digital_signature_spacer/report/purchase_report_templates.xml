@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="purchase_report_inherit_spacer" inherit_id="digital_signature.purchase_report">
+        <xpath expr="//div[@id='signature']//p[@t-field='o.sign_by']" position="before">
+            <div t-if="o.signature_spacer" class="w-100" style="page-break-inside: avoid;">
+                <style>
+                    .signature-spacer-wrapper div {
+                        min-height: 1.2em;
+                    }
+                    .signature-spacer-wrapper p {
+                        min-height: 1.2em;
+                    }
+                </style>
+                <div class="signature-spacer-wrapper">
+                    <t t-out="o.signature_spacer"/>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

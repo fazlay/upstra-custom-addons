@@ -1,0 +1,107 @@
+<!-- views/invoice_template_views.xml -->
+<odoo>
+    <data>
+        <!-- List View - List of Templates -->
+        <record id="view_invoice_template_list" model="ir.ui.view">
+            <field name="name">invoice.template.list</field>
+            <field name="model">invoice.template</field>
+            <field name="arch" type="xml">
+                <list string="Invoice Templates" decoration-success="active">
+                    <field name="name"/>
+                    <field name="note"/>
+                    <field name="total_type_id"/>
+                    <field name="active" widget="boolean_toggle"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Form View - Edit Template -->
+        <record id="view_invoice_template_form" model="ir.ui.view">
+            <field name="name">invoice.template.form</field>
+            <field name="model">invoice.template</field>
+            <field name="arch" type="xml">
+                <form string="Invoice Template">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" string="Template Name"/>
+                                <field name="active" widget="boolean_toggle"/>
+                            </group>
+                            <group>
+                                <field name="total_type_id"/>
+                                <field name="journal_id"/>
+                            </group>
+                        </group>
+
+                        <group string="Note">
+                            <field name="note" nolabel="1" placeholder="Optional notes..."/>
+                        </group>
+
+                        <group string="Template Lines">
+                            <field name="line_ids" colspan="2" nolabel="1">
+                                <list editable="bottom">
+                                    <field name="sequence"/>
+                                    <field name="product_id"/>
+                                    <field name="name"/>
+                                    <field name="quantity"/>
+                                    <field name="price_unit"/>
+                                </list>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action for Menu -->
+        <record id="action_invoice_template" model="ir.actions.act_window">
+            <field name="name">Invoice Templates</field>
+            <field name="res_model">invoice.template</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first invoice template
+                </p>
+                <p>
+                    Templates let you pre-define invoice lines and settings
+                    to quickly create invoices.
+                </p>
+            </field>
+        </record>
+
+        <!-- Menu Item - Under Accounting → Configuration -->
+        <menuitem id="menu_invoice_template" name="Invoice Templates" action="action_invoice_template" parent="account.menu_finance_configuration" sequence="7"/>
+
+        <!-- Add Template dropdown to Invoice Form -->
+        <record id="view_account_move_form_inherit" model="ir.ui.view">
+            <field name="name">account.move.form.inherit.template</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <!-- Add template field in header area (after partner) -->
+                <xpath expr="//field[@name='partner_id']" position="after">
+
+                    <field name="template_id" placeholder="Select Template" invisible="state != 'draft'" context="{'default_total_type_id': total_type_id}"/>
+                    <group>
+                        <field name="unit_price_column" string="Show Unit Price Column"/>
+                        <field name="quantity_column" string="Show Quantity Column"/>
+                    </group>
+                </xpath>
+
+                <!-- Add Recalculate button -->
+                <!-- <xpath expr="//button[@name='action_post']" position="before">
+                    <button name="action_recalculate_custom_lines" type="object" string="Recalculate" invisible="not invoice_line_ids"/>
+                </xpath> -->
+
+                <!-- Custom total fields under invoice lines -->
+                <!-- <xpath expr="//field[@name='invoice_line_ids']" position="after">
+                    <group string="Custom Total Calculation" col="4" invisible="not use_custom_total">
+                        <field name="use_custom_total" string="Enable Custom Total"/>
+                        <field name="custom_total_code" widget="ace" options="{'mode': 'python'}" placeholder="result = sum(l.price_subtotal for l in lines)" colspan="3"/>
+                        <field name="custom_total" readonly="1" string="Calculated Total"/>
+                    </group>
+                </xpath> -->
+            </field>
+        </record>
+    </data>
+</odoo>

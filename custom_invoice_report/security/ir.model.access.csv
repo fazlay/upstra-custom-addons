@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_invoice_total_type_all,invoice.total.type.all,model_invoice_total_type,base.group_user,1,1,1,1

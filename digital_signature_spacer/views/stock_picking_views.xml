@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_picking_form_inherit_spacer" model="ir.ui.view">
+        <field name="name">stock.picking.view.form.inherit.spacer</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="digital_signature.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='inventory_signature']//field[@name='sign_by']" position="before">
+                <field name="signature_spacer" options="{'safe': True}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

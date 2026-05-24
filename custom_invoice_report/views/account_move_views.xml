@@ -1,0 +1,47 @@
+<!-- views/account_move_views.xml -->
+<odoo>
+    <data>
+        <!-- Add Total Calculation Method dropdown and Apply button to invoice form -->
+        <record id="view_move_form_custom_calc" model="ir.ui.view">
+            <field name="name">account.move.form.custom.calc</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <!-- Add total type dropdown in header area -->
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <group string="Custom Total Calculation" col="4">
+                        <field name="total_type_id" placeholder="Select Total Method" invisible="state != 'draft'"/>
+                    </group>
+                </xpath>
+                <xpath expr="//group[@id='header_left_group']/.." position="after">
+                    <group string="Report Options" col="4">
+                        <label for="print_breakdown" string="Print Breakdown"/>
+                        <field name="print_breakdown" widget="boolean_toggle" nolabel="1"/>
+                        <label for="split_table_by_section" string="Split Table by Section"/>
+                        <field name="split_table_by_section" widget="boolean_toggle" nolabel="1"/>
+                        <label for="show_bin" string="Show BIN"/>
+                        <field name="show_bin" widget="boolean_toggle" nolabel="1"/>
+                        <label for="show_exchange_rate" string="Show Exchange Rate"/>
+                        <field name="show_exchange_rate" widget="boolean_toggle" nolabel="1"/>
+                    </group>
+                </xpath>
+
+
+                <!-- Add Recalculate button -->
+                <xpath expr="//button[@name='action_post']" position="before">
+                    <button name="action_recalculate_custom_lines" type="object" string="Recalculate" invisible="not invoice_line_ids"/>
+                </xpath>
+
+                <!-- Custom total fields under invoice lines -->
+                <xpath expr="//field[@name='invoice_line_ids']" position="after">
+                    <group string="Custom Total Calculation" col="4">
+                        <field name="use_custom_total" string="Enable Custom Total"/>
+                        <!-- <field name="custom_total_code" widget="ace" options="{'mode': 'python'}" placeholder="result = sum(l.price_subtotal for l in lines)" colspan="3"/> -->
+                        <field name="custom_total" readonly="1" string="Calculated Total" invisible="not use_custom_total" />
+                    </group>
+
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

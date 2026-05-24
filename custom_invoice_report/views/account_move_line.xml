@@ -1,0 +1,18 @@
+<odoo>
+
+    <record id="view_move_form_inherit_usd_to_bdt" model="ir.ui.view">
+        <field name="name">account.move.form.usd.to.bdt</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Add BDT Conversion group just above the invoice lines notebook -->
+            <xpath expr="//field[@name='invoice_line_ids']" position="after">
+                <group string="BDT Conversion" colspan="4">
+                    <field name="custom_total" readonly="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
