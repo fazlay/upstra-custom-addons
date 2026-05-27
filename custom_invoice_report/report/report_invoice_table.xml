@@ -24,7 +24,7 @@
                                 <th style="width: 450px;" class="text-start">
                                     <span>Product</span>
                                 </th>
-                                <th class="text-center">
+                                <th class="text-left">
                                     <span>Description</span>
                                 </th >
                                 <th class="text-center" t-if="o.quantity_column">
@@ -44,7 +44,7 @@
                                     <td style="width: 450px;">
                                         <span t-field="line.name"/>
                                     </td>
-                                    <td class="text-center">
+                                    <td class="text-left">
                                         <span t-field="line.description"/>
                                     </td>
                                     <td t-if="o.quantity_column" class="text-end">

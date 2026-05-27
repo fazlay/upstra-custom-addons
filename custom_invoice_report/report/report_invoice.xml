@@ -55,34 +55,38 @@
         </xpath> -->
         <!-- <xpath expr="//tr[hasclass('o_subtotal')]" position="replace"/>
         <xpath expr="//tr[hasclass('o_total')]" position="replace"> -->
+        <xpath expr="//tr[hasclass('o_total')]" position="attributes">
+            <attribute name="t-if">not 'display_in_company_currency' in tax_totals</attribute>
+        </xpath>
+        <xpath expr="//tr[hasclass('o_total')]" position="after">
+            <t t-if="'display_in_company_currency' in tax_totals">
+                <tr class="o_total">
+                    <td class="text-end">
 
-        <xpath expr="." position="replace">
-            <tr class="o_total">
-                <td class="text-end">
+                        <t t-if="o.use_custom_total ">
+                            <strong>Total Amount</strong>
+                        </t>
 
-                    <t t-if="o.use_custom_total ">
-                        <strong>Total Amount</strong>
-                    </t>
-
-                    <t t-else="">
-                        <t t-if="o.bdt_rate &lt; 1">
-                            <strong>Total (BDT):</strong>
+                        <t t-else="">
+                            <t t-if="o.bdt_rate &lt; 1">
+                                <strong>Total (BDT):</strong>
+                            </t>
+                            <t t-else="">
+                                <strong>Total (USD):</strong>
+                            </t>
+                        </t>
+                    </td>
+                    <td class="text-end">
+                        <t t-if="o.use_custom_total">
+                            <t t-set="bdt_currency" t-value="env['res.currency'].search([('name', '=', 'BDT')], limit=1)"/>
+                            <strong t-out="o.custom_total" t-options='{"widget": "monetary", "display_currency": bdt_currency}'/>
                         </t>
                         <t t-else="">
-                            <strong>Total (USD):</strong>
+                            <strong t-out="tax_totals['total_amount_currency']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                         </t>
-                    </t>
-                </td>
-                <td class="text-end">
-                    <t t-if="o.use_custom_total">
-                        <t t-set="bdt_currency" t-value="env['res.currency'].search([('name', '=', 'BDT')], limit=1)"/>
-                        <strong t-out="o.custom_total" t-options='{"widget": "monetary", "display_currency": bdt_currency}'/>
-                    </t>
-                    <t t-else="">
-                        <strong t-out="tax_totals['total_amount_currency']" t-options='{"widget": "monetary", "display_currency": currency}'/>
-                    </t>
-                </td>
-            </tr>
+                    </td>
+                </tr>
+            </t>
         </xpath>
     </template>
 </odoo>
