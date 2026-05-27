@@ -1,0 +1,15 @@
+<odoo>
+    <data noupdate="1">
+
+        <record id="total_type_last_2" model="sale.total.type">
+            <field name="name">Remit (Add last Two Line)</field>
+            <field name="description">Calculate total from only the last 2 order lines</field>
+            <field name="total_code">sorted_lines = lines.sorted('sequence')
+if len(sorted_lines) >= 2:
+    result = sorted_lines[-1].price_subtotal + sorted_lines[-2].price_subtotal
+else:
+    result = sum(l.price_subtotal for l in lines)</field>
+        </record>
+
+    </data>
+</odoo>

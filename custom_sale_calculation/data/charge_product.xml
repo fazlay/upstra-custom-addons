@@ -1,0 +1,41 @@
+<odoo>
+    <data noupdate="1">
+
+        <record id="product_charge_transfer_15" model="product.product">
+            <field name="name">Transfer Cost (15%)</field>
+            <field name="type">service</field>
+            <field name="use_custom_calc">True</field>
+            <field name="list_price">0.0</field>
+            <field name="taxes_id" eval="[(5, 0, 0)]"/>
+            <field name="categ_id" ref="product.product_category_all"/>
+        </record>
+
+        <record id="product_charge_remittance_tax_20" model="product.product">
+            <field name="name">Outward Remittance TAX (20%)</field>
+            <field name="type">service</field>
+            <field name="use_custom_calc">True</field>
+            <field name="list_price">0.0</field>
+            <field name="taxes_id" eval="[(5, 0, 0)]"/>
+            <field name="categ_id" ref="product.product_category_all"/>
+        </record>
+
+        <record id="product_charge_remittance_vat_15" model="product.product">
+            <field name="name">Outward Remittance VAT (15%)</field>
+            <field name="type">service</field>
+            <field name="use_custom_calc">True</field>
+            <field name="list_price">0.0</field>
+            <field name="taxes_id" eval="[(5, 0, 0)]"/>
+            <field name="categ_id" ref="product.product_category_all"/>
+        </record>
+
+        <record id="product_local_vat_5" model="product.product">
+            <field name="name">Local VAT (5%)</field>
+            <field name="type">service</field>
+            <field name="use_custom_calc">True</field>
+            <field name="list_price">0.0</field>
+            <field name="taxes_id" eval="[(5, 0, 0)]"/>
+            <field name="categ_id" ref="product.product_category_all"/>
+        </record>
+
+    </data>
+</odoo>
