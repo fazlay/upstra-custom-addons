@@ -45,6 +45,7 @@ class SaleOrderLine(models.Model):
             localdict = {
                 'line': line,
                 'order': line.order_id,
+                'move': line.order_id,
                 'product': line.product_id,
                 'siblings': siblings,
                 'prev_line': prev_line,
@@ -54,7 +55,16 @@ class SaleOrderLine(models.Model):
             custom_code = line.product_id.product_tmpl_id.custom_calc_code
             if custom_code:
                 try:
-                    safe_eval(custom_code, localdict, mode='exec', nocopy=True)
+                    code = custom_code
+                    code = code.replace(
+                        'line.move_id.invoice_line_ids',
+                        'line.order_id.order_line'
+                    )
+                    code = code.replace(
+                        'move.invoice_line_ids',
+                        'order.order_line'
+                    )
+                    safe_eval(code, localdict, mode='exec', nocopy=True)
                     line.price_subtotal = localdict.get('result', 0.0)
                     line.price_total = localdict.get('result', 0.0)
                     if 'set_price_unit' in localdict:

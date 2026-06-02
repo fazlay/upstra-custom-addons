@@ -5,10 +5,8 @@
     'depends': ['sale', 'product', 'custom_invoice_report'],
     'data': [
         'security/ir.model.access.csv',
-        'data/charge_product.xml',
         'data/total_types.xml',
         'report/report_saleorder.xml',
-        'views/product_template_views.xml',
         'views/sale_order_views.xml',
         'views/sale_total_type_views.xml',
     ],

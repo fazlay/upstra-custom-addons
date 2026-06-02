@@ -13,16 +13,12 @@
                     </group>
                 </xpath>
 
-                <xpath expr="//group[@name='sale_header_right']/.." position="after">
+                <xpath expr="//field[@name='date_order']" position="after">
                     <group string="Report Options" col="4">
-                        <label for="print_breakdown" string="Print Breakdown"/>
-                        <field name="print_breakdown" widget="boolean_toggle" nolabel="1"/>
-                        <label for="split_table_by_section" string="Split Table by Section"/>
-                        <field name="split_table_by_section" widget="boolean_toggle" nolabel="1"/>
-                        <label for="show_bin" string="Show BIN"/>
-                        <field name="show_bin" widget="boolean_toggle" nolabel="1"/>
-                        <label for="show_exchange_rate" string="Show Exchange Rate"/>
-                        <field name="show_exchange_rate" widget="boolean_toggle" nolabel="1"/>
+                        <field name="print_breakdown" nolabel="1"/>
+                        <field name="split_table_by_section" nolabel="1"/>
+                        <field name="show_bin" nolabel="1"/>
+                        <field name="show_exchange_rate" nolabel="1"/>
                     </group>
                 </xpath>
 

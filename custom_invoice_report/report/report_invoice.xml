@@ -4,7 +4,7 @@
         <xpath expr="//td[@name='td_subtotal']" position="replace">
             <td name="td_subtotal" class="text-end o_price_total">
                 <span class="text-nowrap" t-if="line.display_subtotal_from_line" t-out="line.display_subtotal_from_line.price_subtotal" t-options="{'widget': 'monetary','display_currency':line.display_subtotal_from_line.product_id.display_currency_id or line.product_id.display_currency_id                  }"/>
-                <span class="text-nowrap" t-else="" t-out="line.price_subtotal" t-options="{                       'widget': 'monetary',                       'display_currency': line.product_id.display_currency_id or o.currency_id                   }"/>
+                <span class="text-nowrap" t-else="" t-out="line.price_subtotal" t-options="{                       'widget': 'monetary',                       'display_currency': o.use_custom_total and (line.product_id.display_currency_id or o.currency_id) or o.currency_id                  }"/>
             </td>
         </xpath>
         <xpath expr="//span[@t-field='o.invoice_number']" position="after">
@@ -60,15 +60,15 @@
         </xpath>
         <xpath expr="//tr[hasclass('o_total')]" position="after">
             <t t-if="'display_in_company_currency' in tax_totals">
+
+                <!-- Row 1: USD Total (or Custom Total) -->
                 <tr class="o_total">
                     <td class="text-end">
-
-                        <t t-if="o.use_custom_total ">
+                        <t t-if="o.use_custom_total">
                             <strong>Total Amount</strong>
                         </t>
-
                         <t t-else="">
-                            <t t-if="o.bdt_rate &lt; 1">
+                            <t t-if="o.currency_id.name == 'BDT'">
                                 <strong>Total (BDT):</strong>
                             </t>
                             <t t-else="">
@@ -79,13 +79,27 @@
                     <td class="text-end">
                         <t t-if="o.use_custom_total">
                             <t t-set="bdt_currency" t-value="env['res.currency'].search([('name', '=', 'BDT')], limit=1)"/>
-                            <strong t-out="o.custom_total" t-options='{"widget": "monetary", "display_currency": bdt_currency}'/>
+                            <strong t-out="o.custom_total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: bdt_currency}"/>
                         </t>
                         <t t-else="">
-                            <strong t-out="tax_totals['total_amount_currency']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                            <strong t-out="tax_totals['total_amount_currency']" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: currency}"/>
                         </t>
                     </td>
                 </tr>
+
+                <!-- Row 2: BDT Total (only when bdt_rate >= 1 and not custom total) -->
+                <t t-if="not o.use_custom_total and not o.bdt_rate &lt; 1">
+                    <tr class="o_total">
+                        <td class="text-end">
+                            <strong>Total (BDT):</strong>
+                        </td>
+                        <td class="text-end">
+                            <t t-set="bdt_currency" t-value="env['res.currency'].search([('name', '=', 'BDT')], limit=1)"/>
+                            <strong t-out="tax_totals['total_amount_currency'] * o.bdt_rate" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: bdt_currency}"/>
+                        </td>
+                    </tr>
+                </t>
+
             </t>
         </xpath>
     </template>
