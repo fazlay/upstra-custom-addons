@@ -33,21 +33,41 @@
                     <table class="o_has_total_table table o_main_table table-borderless mb-0">
                         <thead>
                             <tr>
-                                <th style="width: 450px;" class="text-start"><span>Product</span></th>
-                                <th class="text-center"><span>Description</span></th>
-                                <th class="text-center" t-if="doc.quantity_column"><span>Quantity</span></th>
-                                <th class="text-center" t-if="doc.unit_price_column"><span>Unit Price</span></th>
-                                <th class="text-end"><span>Amount</span></th>
+                                <th style="width: 450px;" class="text-start">
+                                    <span>Product</span>
+                                </th>
+                                <th class="text-center">
+                                    <span>Description</span>
+                                </th>
+                                <th class="text-center" t-if="doc.quantity_column">
+                                    <span>Quantity</span>
+                                </th>
+                                <th class="text-center" t-if="doc.unit_price_column">
+                                    <span>Unit Price</span>
+                                </th>
+                                <th class="text-end">
+                                    <span>Amount</span>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             <t t-foreach="breakdown_lines" t-as="line">
                                 <tr>
-                                    <td style="width: 450px;"><span t-field="line.name"/></td>
-                                    <td class="text-center"><span t-field="line.product_id.description_sale"/></td>
-                                    <td t-if="doc.quantity_column" class="text-end"><span t-field="line.product_uom_qty"/></td>
-                                    <td t-if="doc.unit_price_column" class="text-end"><span t-field="line.price_unit"/></td>
-                                    <td class="text-end"><span t-field="line.price_subtotal" t-options="{'widget': 'monetary', 'display_currency': line.product_id.display_currency_id or doc.currency_id}"/></td>
+                                    <td style="width: 450px;">
+                                        <span t-field="line.name"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="line.product_id.description_sale"/>
+                                    </td>
+                                    <td t-if="doc.quantity_column" class="text-end">
+                                        <span t-field="line.product_uom_qty"/>
+                                    </td>
+                                    <td t-if="doc.unit_price_column" class="text-end">
+                                        <span t-field="line.price_unit"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="line.price_subtotal" t-options="{'widget': 'monetary', 'display_currency': line.product_id.display_currency_id or doc.currency_id}"/>
+                                    </td>
                                 </tr>
                             </t>
                         </tbody>
@@ -123,23 +143,47 @@
                     <table t-if="group_lines" class="o_has_total_table table o_main_table table-borderless mb-4" name="sale_order_table_split">
                         <thead t-if="not (is_section and group_last)">
                             <tr>
-                                <th class="text-start" style="width: 450px;"><span>Product</span></th>
-                                <th t-if="not (is_section and group_last)" class="text-end"><span>Description</span></th>
-                                <th t-if="not (is_section and group_last)" class="text-end"><span>Quantity</span></th>
-                                <th t-if="not (is_section and group_last)" class="text-end"><span>Unit Price</span></th>
-                                <th t-if="display_discount and not (is_section and group_last)" class="text-end"><span>Disc.%</span></th>
-                                <th class="text-end"><span>Amount</span></th>
+                                <th class="text-start" style="width: 450px;">
+                                    <span>Product</span>
+                                </th>
+                                <th t-if="not (is_section and group_last)" class="text-end">
+                                    <span>Description</span>
+                                </th>
+                                <th t-if="not (is_section and group_last)" class="text-end">
+                                    <span>Quantity</span>
+                                </th>
+                                <th t-if="not (is_section and group_last)" class="text-end">
+                                    <span>Unit Price</span>
+                                </th>
+                                <th t-if="display_discount and not (is_section and group_last)" class="text-end">
+                                    <span>Disc.%</span>
+                                </th>
+                                <th class="text-end">
+                                    <span>Amount</span>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             <t t-foreach="group_lines" t-as="line">
                                 <tr>
-                                    <td style="width: 450px;"><span t-field="line.name"/></td>
-                                    <td class="text-end" style="width: 250px;"><span t-field="line.product_id.description_sale"/></td>
-                                    <td class="text-end"><span t-field="line.product_uom_qty"/></td>
-                                    <td class="text-end"><span t-field="line.price_unit"/></td>
-                                    <td t-if="display_discount" class="text-end"><span t-field="line.discount"/></td>
-                                    <td class="text-end"><span t-field="line.price_subtotal" t-options="{'widget': 'monetary', 'display_currency': line.product_id.display_currency_id or doc.currency_id}"/></td>
+                                    <td style="width: 450px;">
+                                        <span t-field="line.name"/>
+                                    </td>
+                                    <td class="text-end" style="width: 250px;">
+                                        <span t-field="line.product_id.description_sale"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="line.product_uom_qty"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="line.price_unit"/>
+                                    </td>
+                                    <td t-if="display_discount" class="text-end">
+                                        <span t-field="line.discount"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="line.price_subtotal" t-options="{'widget': 'monetary', 'display_currency': line.product_id.display_currency_id or doc.currency_id}"/>
+                                    </td>
                                 </tr>
                             </t>
                         </tbody>
@@ -150,7 +194,7 @@
 
     </template>
 
-    <template id="sale_custom_tax_totals" inherit_id="sale.document_tax_totals" priority="10">
+    <!-- <template id="sale_custom_tax_totals" inherit_id="sale.document_tax_totals" priority="10">
         <xpath expr="." position="replace">
             <tr class="o_total">
                 <td class="text-end">
@@ -172,6 +216,6 @@
                 </td>
             </tr>
         </xpath>
-    </template>
+    </template> -->
 
 </odoo>
