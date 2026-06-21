@@ -1,5 +1,9 @@
+import logging
+
 from odoo import models, fields, api
 from odoo.tools.safe_eval import safe_eval
+
+_logger = logging.getLogger(__name__)
 
 
 class SaleOrderLine(models.Model):
@@ -70,9 +74,11 @@ class SaleOrderLine(models.Model):
                     if 'set_price_unit' in localdict:
                         line.price_unit = localdict['set_price_unit']
                 except Exception as e:
-                    raise ValueError(
-                        f"Error in custom calculation for {line.product_id.name}: {e}"
+                    _logger.warning(
+                        "Custom calc failed for line %s (%s, product %s): %s",
+                        line.id, line.display_name, line.product_id.display_name, e
                     )
+                    super(SaleOrderLine, line)._compute_amount()
             else:
                 super(SaleOrderLine, line)._compute_amount()
 
