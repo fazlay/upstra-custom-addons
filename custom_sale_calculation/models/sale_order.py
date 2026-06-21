@@ -63,23 +63,26 @@ result = sum(l.price_subtotal for l in lines)
     @api.depends('order_line.price_subtotal', 'use_custom_total', 'custom_total_code', 'total_type_id')
     def _compute_custom_total(self):
         for order in self:
-            if order.use_custom_total and (order.custom_total_code or order.total_type_id):
-                localdict = {
-                    'order': order,
-                    'lines': order.order_line,
-                    'result': 0.0,
-                }
-                try:
-                    code = order.custom_total_code or (order.total_type_id.total_code if order.total_type_id else '')
-                    if code:
-                        safe_eval(code, localdict, mode='exec', nocopy=True)
-                        order.custom_total = localdict.get('result', order.amount_untaxed)
-                    else:
-                        order.custom_total = order.amount_untaxed
-                except Exception as e:
-                    _logger.warning("Custom total calculation failed for order %s: %s", order.id, e)
-                    order.custom_total = order.amount_untaxed
-            else:
+            if not order.use_custom_total:
+                order.custom_total = order.amount_untaxed
+                continue
+            code = order.total_type_id.total_code if order.total_type_id else order.custom_total_code
+            if not code:
+                order.custom_total = order.amount_untaxed
+                continue
+            localdict = {
+                'order': order,
+                'lines': order.order_line,
+                'result': 0.0,
+            }
+            try:
+                safe_eval(code, localdict, mode='exec', nocopy=True)
+                order.custom_total = localdict.get('result', order.amount_untaxed)
+            except Exception as e:
+                _logger.warning(
+                    "Custom total calculation failed for order %s (total_type %s): %s",
+                    order.id, order.total_type_id.display_name if order.total_type_id else 'N/A', e
+                )
                 order.custom_total = order.amount_untaxed
 
     def action_recalculate_custom_lines(self):
