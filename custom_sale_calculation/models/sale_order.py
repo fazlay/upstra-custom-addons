@@ -1,5 +1,9 @@
+import logging
+
 from odoo import api, fields, models
 from odoo.tools.safe_eval import safe_eval
+
+_logger = logging.getLogger(__name__)
 
 
 class SaleOrder(models.Model):
@@ -72,11 +76,11 @@ result = sum(l.price_subtotal for l in lines)
                         order.custom_total = localdict.get('result', order.amount_untaxed)
                     else:
                         order.custom_total = order.amount_untaxed
-                except Exception:
+                except Exception as e:
+                    _logger.warning("Custom total calculation failed for order %s: %s", order.id, e)
                     order.custom_total = order.amount_untaxed
             else:
-                if not order.custom_total:
-                    order.custom_total = order.amount_untaxed
+                order.custom_total = order.amount_untaxed
 
     def action_recalculate_custom_lines(self):
         self.ensure_one()
@@ -93,6 +97,9 @@ result = sum(l.price_subtotal for l in lines)
             if self.order_line:
                 self.order_line._compute_amount()
                 self._compute_custom_total()
+        else:
+            self.use_custom_total = False
+            self.custom_total_code = False
 
     def _prepare_invoice(self):
         vals = super()._prepare_invoice()
