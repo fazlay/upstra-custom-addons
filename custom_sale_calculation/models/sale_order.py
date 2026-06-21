@@ -70,6 +70,8 @@ result = sum(l.price_subtotal for l in lines)
             if not code:
                 order.custom_total = order.amount_untaxed
                 continue
+            code = code.replace('line.move_id.invoice_line_ids', 'lines')
+            code = code.replace('move.invoice_line_ids', 'lines')
             localdict = {
                 'order': order,
                 'lines': order.order_line,
