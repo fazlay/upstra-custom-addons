@@ -69,7 +69,7 @@
                         </t>
                         <t t-else="">
                             <t t-if="o.currency_id.name == 'BDT'">
-                                <strong>Total (BDT):</strong>
+                                <strong>Total (BDT)-:</strong>
                             </t>
                             <t t-else="">
                                 <strong>Total (USD):</strong>
@@ -91,7 +91,7 @@
                 <t t-if="not o.use_custom_total and not o.bdt_rate &lt; 1">
                     <tr class="o_total">
                         <td class="text-end">
-                            <strong>Total (BDT):</strong>
+                            <strong>Total (BDT)-:</strong>
                         </td>
                         <td class="text-end">
                             <t t-set="bdt_currency" t-value="env['res.currency'].search([('name', '=', 'BDT')], limit=1)"/>

@@ -95,6 +95,21 @@ class SaleOrderLine(models.Model):
         domain="[('order_id', '=', order_id)]"
     )
 
+    line_currency_id = fields.Many2one(
+        'res.currency',
+        compute='_compute_line_currency',
+        store=False,
+        readonly=True,
+    )
+
+    @api.depends('product_id.display_currency_id', 'order_id.bdt_rate', 'order_id.currency_id')
+    def _compute_line_currency(self):
+        for line in self:
+            if line.order_id and line.order_id.bdt_rate and line.product_id.display_currency_id:
+                line.line_currency_id = line.product_id.display_currency_id
+            else:
+                line.line_currency_id = line.order_id.currency_id if line.order_id else self.env.company.currency_id
+
     line_type = fields.Selection(
         [('main_invoice_only', 'Invoice'), ('breakdown', 'Items Breakdown'), ('both', 'Both')],
         string="Line Type",

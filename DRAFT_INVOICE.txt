@@ -1,0 +1,75 @@
+================================================================================
+                              DRAFT INVOICE
+================================================================================
+
+Invoice #:      INV-2025-001
+Date:           _______________
+Due Date:       _______________
+
+Bill To:
+  Client Name:  _______________
+  Address:      _______________
+  _______________
+
+From:
+  Your Company: _______________
+  Email:        _______________
+  Phone:        _______________
+
+================================================================================
+  #  | Description                                            | Amount (USD)
+================================================================================
+
+  1  | Custom Invoice Line Calculation Engine                  |    $2,000.00
+     | Custom Python-based pricing engine that automatically
+     | calculates invoice line amounts based on configurable
+     | business rules. Supports dynamic line-level totals,
+     | multiple display options (breakdown sections, split
+     | tables by category), currency display overrides, and
+     | BIN/exchange rate display on invoices.
+     |
+
+  2  | Invoice Template & Quick-Fill System                   |      $800.00
+     | Reusable invoice templates that allow one-click
+     | population of invoices with predefined line items,
+     | pricing, and settings. Eliminates repetitive data
+     | entry and ensures consistency across invoices.
+     | Includes configurable show/hide of quantity and
+     | unit price columns on printed invoices.
+     |
+
+  3  | Sales Order Custom Pricing & Invoice Propagation       |    $1,500.00
+     | Extends the custom pricing engine to sales orders,
+     | enabling consistent calculations from quotation
+     | through invoicing. All custom pricing rules, display
+     | preferences, and total calculation methods configured
+     | on a sales order are automatically carried forward
+     | when generating the invoice.
+     |
+
+  4  | Digital Signature Spacer for Documents                 |      $500.00
+     | Customizable HTML spacer field placed before the
+     | signature block on invoices, purchase orders, and
+     | delivery receipts. Allows insertion of additional
+     | terms, notes, or branding elements before signing.
+     |
+
+================================================================================
+                                    SUBTOTAL    $4,800.00
+                                    TAX (0%)    $    0.00
+                                    TOTAL       $4,800.00
+================================================================================
+
+Payment Terms:  Net 30
+Payment Method: Bank Transfer / Wire
+
+Bank Details:
+  Bank Name:    _______________
+  Account Name: _______________
+  Account #:    _______________
+  Routing #:    _______________
+  IBAN/SWIFT:   _______________
+
+================================================================================
+                         Thank you for your business!
+================================================================================

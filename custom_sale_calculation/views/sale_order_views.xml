@@ -42,7 +42,11 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='order_line']/list//field[@name='price_subtotal']" position="before">
+                    <field name="line_currency_id" invisible="1"/>
                     <field name="display_subtotal_from_line" optional="show" string="Subtotal From" domain="[('order_id', '=', parent.id)]"/>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/list//field[@name='price_subtotal']" position="attributes">
+                    <attribute name="options">{'currency_field': 'line_currency_id'}</attribute>
                 </xpath>
             </field>
         </record>
