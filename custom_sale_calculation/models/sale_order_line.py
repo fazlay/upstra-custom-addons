@@ -102,10 +102,10 @@ class SaleOrderLine(models.Model):
         readonly=True,
     )
 
-    @api.depends('product_id.display_currency_id', 'order_id.bdt_rate', 'order_id.currency_id')
+    @api.depends('product_id.display_currency_id', 'order_id.use_custom_total', 'order_id.currency_id')
     def _compute_line_currency(self):
         for line in self:
-            if line.order_id and line.order_id.bdt_rate and line.product_id.display_currency_id:
+            if line.order_id and line.order_id.use_custom_total and line.product_id.display_currency_id:
                 line.line_currency_id = line.product_id.display_currency_id
             else:
                 line.line_currency_id = line.order_id.currency_id if line.order_id else self.env.company.currency_id
