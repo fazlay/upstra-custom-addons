@@ -79,8 +79,8 @@ class AccountMoveLine(models.Model):
             custom_lines = self.move_id.invoice_line_ids.filtered('use_custom_calc')
             if custom_lines:
                 custom_lines._compute_totals()
-                
-display_subtotal_from_line = fields.Many2one(
+
+    display_subtotal_from_line = fields.Many2one(
         'account.move.line',
         string="Show Subtotal From Line",
         domain="[('move_id', '=', move_id)]"
@@ -100,7 +100,6 @@ display_subtotal_from_line = fields.Many2one(
                 line.line_currency_id = line.product_id.display_currency_id
             else:
                 line.line_currency_id = line.move_id.currency_id if line.move_id else self.env.company.currency_id
-
 
     line_type = fields.Selection(
         [('main_invoice_only', 'Invoice'), ('breakdown', 'Items Breakdown'), ('both', 'Both')],
