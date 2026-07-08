@@ -5,11 +5,11 @@
         <xpath expr="//tr[hasclass('o_total')]" position="replace">
             <tr class="o_total">
                 <td class="text-end">
-                    <t t-if="doc.use_custom_total">
+                    <t t-if="tax_totals.get('use_custom_total')">
                         <strong>Total Amount</strong>
                     </t>
                     <t t-else="">
-                        <t t-if="doc.currency_id.name == 'BDT'">
+                        <t t-if="currency.name == 'BDT'">
                             <strong>Total (BDT):</strong>
                         </t>
                         <t t-else="">
@@ -18,12 +18,12 @@
                     </t>
                 </td>
                 <td class="text-end">
-                    <t t-if="doc.use_custom_total">
+                    <t t-if="tax_totals.get('use_custom_total')">
                         <t t-set="bdt_currency" t-value="env['res.currency'].search([('name', '=', 'BDT')], limit=1)"/>
-                        <strong t-out="doc.custom_total" t-options="{'widget': 'monetary', 'display_currency': bdt_currency}"/>
+                        <strong t-out="tax_totals.get('custom_total')" t-options="{'widget': 'monetary', 'display_currency': bdt_currency}"/>
                     </t>
                     <t t-else="">
-                        <strong t-out="doc.amount_total" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                        <strong t-out="tax_totals['total_amount_currency']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
                     </t>
                 </td>
             </tr>

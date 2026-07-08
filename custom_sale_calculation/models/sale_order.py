@@ -118,3 +118,12 @@ result = sum(l.price_subtotal for l in lines)
             'show_exchange_rate': self.show_exchange_rate,
         })
         return vals
+
+    def _compute_tax_totals(self):
+        super()._compute_tax_totals()
+        for order in self:
+            tax_totals = order.tax_totals
+            if tax_totals:
+                tax_totals['use_custom_total'] = order.use_custom_total
+                tax_totals['custom_total'] = order.custom_total
+                order.tax_totals = tax_totals
