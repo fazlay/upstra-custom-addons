@@ -80,12 +80,26 @@ class AccountMoveLine(models.Model):
             if custom_lines:
                 custom_lines._compute_totals()
                 
-    display_subtotal_from_line = fields.Many2one(
+display_subtotal_from_line = fields.Many2one(
         'account.move.line',
         string="Show Subtotal From Line",
         domain="[('move_id', '=', move_id)]"
     )
 
+    line_currency_id = fields.Many2one(
+        'res.currency',
+        compute='_compute_line_currency',
+        store=False,
+        readonly=True,
+    )
+
+    @api.depends('product_id.display_currency_id', 'move_id.use_custom_total', 'move_id.currency_id')
+    def _compute_line_currency(self):
+        for line in self:
+            if line.move_id and line.move_id.use_custom_total and line.product_id.display_currency_id:
+                line.line_currency_id = line.product_id.display_currency_id
+            else:
+                line.line_currency_id = line.move_id.currency_id if line.move_id else self.env.company.currency_id
 
 
     line_type = fields.Selection(
