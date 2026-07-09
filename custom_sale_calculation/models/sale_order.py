@@ -12,7 +12,8 @@ class SaleOrder(models.Model):
     total_type_id = fields.Many2one(
         'sale.total.type',
         string='Total Calculation Type',
-        help="Select a calculation method for order total"
+        help="Select a calculation method for order total",
+        default=lambda self: self.env['sale.total.type'].search([], limit=1)
     )
 
     use_custom_total = fields.Boolean(
@@ -54,7 +55,7 @@ result = sum(l.price_subtotal for l in lines)
     )
 
     custom_total = fields.Monetary(
-        string="Custom Total",
+        string="Total Amount",
         compute='_compute_custom_total',
         store=True,
         readonly=False,

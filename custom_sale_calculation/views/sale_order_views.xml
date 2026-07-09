@@ -13,14 +13,14 @@
                     </group>
                 </xpath>
 
-                <xpath expr="//field[@name='date_order']" position="after">
+                <!-- <xpath expr="//field[@name='date_order']" position="after">
                     <group string="Report Options" col="4">
-                        <field name="print_breakdown" nolabel="1"/>
+                      <field name="print_breakdown" nolabel="1"/>
                         <field name="split_table_by_section" nolabel="1"/>
-                        <field name="show_bin" nolabel="1"/>
+                      <field name="show_bin" nolabel="1"/> 
                         <field name="show_exchange_rate" nolabel="1"/>
                     </group>
-                </xpath>
+                </xpath> -->
 
                 <xpath expr="//button[@name='action_confirm']" position="before">
                     <button name="action_recalculate_custom_lines" type="object" string="Recalculate" invisible="not order_line"/>
@@ -29,7 +29,29 @@
                 <xpath expr="//field[@name='order_line']" position="after">
                     <group string="Custom Total Calculation" col="4">
                         <field name="use_custom_total" string="Enable Custom Total"/>
-                        <field name="custom_total" readonly="1" string="Calculated Total" invisible="not use_custom_total"/>
+                    </group>
+                </xpath>
+
+                <xpath expr="//field[@name='amount_total_bdt']" position="attributes">
+                    <attribute name="invisible">use_custom_total</attribute>
+                </xpath>
+
+                <xpath expr="//group[@name='sale_total']" position="attributes">
+                    <attribute name="invisible">use_custom_total</attribute>
+                </xpath>
+
+                <xpath expr="//button[@name='action_open_discount_wizard']" position="attributes">
+                    <attribute name="invisible">use_custom_total</attribute>
+                </xpath>
+
+                <xpath expr="//group[@name='note_group']" position="inside">
+                    <group class="oe_subtotal_footer d-flex order-0 order-lg-1 flex-column gap-0 gap-sm-3" colspan="2" name="custom_sale_total" invisible="not use_custom_total">
+                        <div class="d-flex justify-content-end align-items-center gap-3 w-100">
+                            <span class="fw-bold fs-3 m-0">Total Amount</span>
+                            <h1 class="m-0 fw-bold">
+                                <field name="custom_total" widget="float" readonly="1" nolabel="1"/>
+                            </h1>
+                        </div>
                     </group>
                 </xpath>
 
