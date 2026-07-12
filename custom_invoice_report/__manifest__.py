@@ -2,7 +2,7 @@
     'name': 'Custom Invoice Calculation',
     'version': '18.0.4.0.0',
     'summary': 'Custom calculation for invoice lines with selectable total methods',
-    'depends': ['account', 'product'],
+    'depends': ['account', 'product', 'sale_usd_to_bdt'],
     'data': [
         'security/ir.model.access.csv',
         'data/charge_product.xml',
