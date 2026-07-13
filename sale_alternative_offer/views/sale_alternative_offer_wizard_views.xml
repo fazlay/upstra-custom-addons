@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_sale_alternative_offer_wizard_form" model="ir.ui.view">
+        <field name="name">sale.alternative.offer.wizard.form</field>
+        <field name="model">sale.alternative.offer.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Alternative Offers">
+                <field name="currency_id" invisible="1"/>
+                <field name="partner_id" invisible="1"/>
+                <sheet>
+                    <div class="row">
+                        <div class="col-6">
+                            <group>
+                                <field name="sale_order_id" readonly="1" string="Original Quotation"/>
+                                <field name="partner_id" readonly="1" string="Customer"/>
+                            </group>
+                        </div>
+                        <div class="col-6">
+                            <group>
+                                <field name="currency_id" readonly="1" string="Currency"/>
+                            </group>
+                        </div>
+                    </div>
+                    <notebook>
+                        <page string="Original Offer" name="original_offer">
+                            <field name="original_line_ids" readonly="1">
+                                <list edit="0" create="0" delete="0">
+                                    <field name="product_id" readonly="1"/>
+                                    <field name="name" readonly="1" string="Description"/>
+                                    <field name="product_uom_qty" readonly="1" string="Quantity"/>
+                                    <field name="price_unit" readonly="1" string="Unit Price"/>
+                                    <field name="discount" readonly="1" string="Discount"/>
+                                    <field name="tax_ids" widget="many2many_tags" readonly="1" string="Taxes"/>
+                                    <field name="price_subtotal" widget="monetary" readonly="1" string="Subtotal"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Alternative Offer 1" name="alternative_offer_1">
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <group>
+                                        <field name="alternative_1_title" string="Alternative Offer Name" placeholder="e.g. Yearly VPS Plan"/>
+                                    </group>
+                                </div>
+                            </div>
+                            <field name="alternative_1_line_ids">
+                                <list editable="bottom" create="0" delete="0">
+                                    <field name="product_id" readonly="1" force_save="1"/>
+                                    <field name="name" readonly="1" force_save="1" string="Description"/>
+                                    <field name="product_uom_qty" readonly="1" force_save="1" string="Quantity"/>
+                                    <field name="price_unit" string="Unit Price"/>
+                                    <field name="discount" string="Discount"/>
+                                    <field name="tax_ids" widget="many2many_tags" readonly="1" force_save="1" string="Taxes"/>
+                                    <field name="price_subtotal" widget="monetary" readonly="1" string="Subtotal"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer float-end">
+                                <field name="alternative_1_amount_untaxed" widget="monetary" string="Untaxed Total"/>
+                                <field name="alternative_1_amount_tax" widget="monetary" string="Tax"/>
+                                <field name="alternative_1_amount_total" widget="monetary" string="Grand Total" class="oe_subtotal_footer_separator"/>
+                            </group>
+                        </page>
+                        <page string="Alternative Offer 2" name="alternative_offer_2">
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <group>
+                                        <field name="alternative_2_title" string="Alternative Offer Name" placeholder="e.g. Two Year VPS Plan"/>
+                                    </group>
+                                </div>
+                            </div>
+                            <field name="alternative_2_line_ids">
+                                <list editable="bottom" create="0" delete="0">
+                                    <field name="product_id" readonly="1" force_save="1"/>
+                                    <field name="name" readonly="1" force_save="1" string="Description"/>
+                                    <field name="product_uom_qty" readonly="1" force_save="1" string="Quantity"/>
+                                    <field name="price_unit" string="Unit Price"/>
+                                    <field name="discount" string="Discount"/>
+                                    <field name="tax_ids" widget="many2many_tags" readonly="1" force_save="1" string="Taxes"/>
+                                    <field name="price_subtotal" widget="monetary" readonly="1" string="Subtotal"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer float-end">
+                                <field name="alternative_2_amount_untaxed" widget="monetary" string="Untaxed Total"/>
+                                <field name="alternative_2_amount_tax" widget="monetary" string="Tax"/>
+                                <field name="alternative_2_amount_total" widget="monetary" string="Grand Total" class="oe_subtotal_footer_separator"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button name="action_generate_offers" string="Generate Offers" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Wizard Window Action -->
+    <record id="action_sale_alternative_offer_wizard" model="ir.actions.act_window">
+        <field name="name">Generate Alternative Offers</field>
+        <field name="res_model">sale.alternative.offer.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

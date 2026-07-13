@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Custom Tree View for Alternative Offers -->
+    <record id="view_alternative_offers_tree" model="ir.ui.view">
+        <field name="name">sale.order.alternative.list</field>
+        <field name="model">sale.order</field>
+        <field name="arch" type="xml">
+            <list string="Alternative Offers" create="0">
+                <field name="name" string="Quotation Number"/>
+                <field name="offer_name" string="Quotation Name"/>
+                <field name="partner_id" string="Customer"/>
+                <field name="amount_total" widget="monetary"/>
+                <field name="state" widget="badge" decoration-success="state == 'sale'" decoration-info="state == 'draft'"/>
+                <field name="create_date" string="Creation Date"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Window Action for Alternative Offers -->
+    <record id="action_alternative_offers" model="ir.actions.act_window">
+        <field name="name">Alternative Offers</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('parent_sale_order_id', '=', active_id)]</field>
+        <field name="context">{'default_parent_sale_order_id': active_id, 'default_is_alternative_offer': True}</field>
+        <field name="view_id" ref="view_alternative_offers_tree"/>
+    </record>
+
+    <!-- Inherit Sale Order Form View -->
+    <record id="view_order_form_inherit_alternative" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.alternative</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <!-- Add Generate and Print buttons in header -->
+            <xpath expr="//header" position="inside">
+                <button name="action_generate_alternative_offers" 
+                        string="Generate Alternative Offers" 
+                        type="object" 
+                        class="btn-primary" 
+                        invisible="state in ['cancel', 'sale'] or is_alternative_offer"
+                        groups="sales_team.group_sale_salesman"/>
+                <button name="action_print_all_offers" 
+                        string="Print All Offers" 
+                        type="object" 
+                        class="btn-secondary" 
+                        invisible="alternative_offers_count == 0 or is_alternative_offer"
+                        groups="sales_team.group_sale_salesman"/>
+            </xpath>
+
+            <!-- Add Smart Button in button_box -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="%(sale_alternative_offer.action_alternative_offers)d"
+                        type="action"
+                        class="oe_stat_button"
+                        icon="fa-files-o"
+                        invisible="is_alternative_offer"
+                        groups="sales_team.group_sale_salesman">
+                    <field name="alternative_offers_count" widget="statinfo" string="Alternative Offers"/>
+                </button>
+            </xpath>
+
+            <!-- Add Offer Name in form header next to quotation number -->
+            <xpath expr="//field[@name='name']" position="after">
+                <span invisible="not offer_name"> - </span>
+                <field name="offer_name" readonly="state in ['cancel', 'sale']" class="oe_inline"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit Sale Order List (Tree) View to show Offer Name -->
+    <record id="view_order_tree_inherit_alternative" model="ir.ui.view">
+        <field name="name">sale.order.list.inherit.alternative</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.sale_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="offer_name" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit Sale Order Search View -->
+    <record id="view_sales_order_filter_inherit_alternative" model="ir.ui.view">
+        <field name="name">sale.order.search.inherit.alternative</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='my_sale_orders_filter']" position="before">
+                <filter string="Original Offers Only" name="original_offers_only" domain="[('is_alternative_offer', '=', False)]"/>
+                <separator/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Modify standard Quotations actions to set default search filter instead of hardcoded domain -->
+    <record id="sale.action_quotations" model="ir.actions.act_window">
+        <field name="domain" eval="False"/>
+        <field name="context">{'search_default_my_quotation': 1, 'search_default_original_offers_only': 1}</field>
+    </record>
+
+    <record id="sale.action_quotations_with_onboarding" model="ir.actions.act_window">
+        <field name="domain" eval="False"/>
+        <field name="context">{'search_default_my_quotation': 1, 'search_default_original_offers_only': 1}</field>
+    </record>
+
+    <record id="sale.action_orders" model="ir.actions.act_window">
+        <field name="context">{'search_default_original_offers_only': 1}</field>
+    </record>
+</odoo>
