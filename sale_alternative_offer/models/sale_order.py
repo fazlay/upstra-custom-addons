@@ -54,6 +54,5 @@ class SaleOrder(models.Model):
 
     def action_print_all_offers(self):
         self.ensure_one()
-        # Collect the original order and all its alternative offers
-        orders = self | self.child_sale_order_ids
-        return self.env.ref('sale.action_report_saleorder').report_action(orders)
+        parent_order = self.parent_sale_order_id or self
+        return self.env.ref('sale_alternative_offer.action_report_sale_alternative').report_action(parent_order)

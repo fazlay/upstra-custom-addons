@@ -20,6 +20,7 @@ without affecting the existing sales workflow.
         'security/ir.model.access.csv',
         'views/sale_order_views.xml',
         'views/sale_alternative_offer_wizard_views.xml',
+        'views/sale_alternative_offer_report.xml',
     ],
     'installable': True,
     'application': True,

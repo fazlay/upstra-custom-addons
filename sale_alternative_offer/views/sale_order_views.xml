@@ -62,10 +62,10 @@
             </xpath>
 
             <!-- Add Offer Name in form header next to quotation number -->
-            <xpath expr="//field[@name='name']" position="after">
+            <!-- <xpath expr="//field[@name='name']" position="after">
                 <span invisible="not offer_name"> - </span>
                 <field name="offer_name" readonly="state in ['cancel', 'sale']" class="oe_inline"/>
-            </xpath>
+            </xpath> -->
         </field>
     </record>
 
