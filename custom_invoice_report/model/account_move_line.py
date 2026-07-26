@@ -93,13 +93,45 @@ class AccountMoveLine(models.Model):
         readonly=True,
     )
 
-    @api.depends('product_id.display_currency_id', 'move_id.use_custom_total', 'move_id.currency_id')
+    @api.depends(
+        'product_id',
+        'product_id.display_currency_id',
+        'product_id.currency_mode',
+        'product_id.reference_product_id',
+        'move_id.invoice_line_ids',
+        'move_id.invoice_line_ids.sequence',
+        'move_id.invoice_line_ids.product_id',
+        'move_id.use_custom_total',
+        'move_id.currency_id',
+    )
     def _compute_line_currency(self):
         for line in self:
-            if line.move_id and line.move_id.use_custom_total and line.product_id.display_currency_id:
-                line.line_currency_id = line.product_id.display_currency_id
+            move = line.move_id
+            product = line.product_id
+            tmpl = product.product_tmpl_id if product else False
+
+            if move and tmpl:
+                if tmpl.currency_mode == 'computed' and tmpl.reference_product_id:
+                    sorted_lines = move.invoice_line_ids.sorted(key=lambda l: (l.sequence or 0, l._origin.id or 0))
+                    ref_line = sorted_lines.filtered(lambda l: l.product_id == tmpl.reference_product_id)
+
+                    if ref_line:
+                        line_list = list(sorted_lines)
+                        line_idx = line_list.index(line) if line in line_list else -1
+                        ref_idx = line_list.index(ref_line[0]) if ref_line[0] in line_list else -1
+
+                        if line_idx != -1 and ref_idx != -1:
+                            target_code = 'USD' if line_idx < ref_idx else 'BDT'
+                            currency = self.env['res.currency'].search([('name', '=', target_code)], limit=1)
+                            line.line_currency_id = currency or move.currency_id
+                            continue
+
+                if tmpl.display_currency_id:
+                    line.line_currency_id = tmpl.display_currency_id
+                else:
+                    line.line_currency_id = move.currency_id or self.env.company.currency_id
             else:
-                line.line_currency_id = line.move_id.currency_id if line.move_id else self.env.company.currency_id
+                line.line_currency_id = move.currency_id if move else self.env.company.currency_id
 
     line_type = fields.Selection(
         [('main_invoice_only', 'Invoice'), ('breakdown', 'Items Breakdown'), ('both', 'Both')],

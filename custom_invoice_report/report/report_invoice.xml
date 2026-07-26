@@ -3,8 +3,8 @@
     <template id="report_invoice_document_inherit_custom" inherit_id="account.report_invoice_document">
         <xpath expr="//td[@name='td_subtotal']" position="replace">
             <td name="td_subtotal" class="text-end o_price_total">
-                <span class="text-nowrap" t-if="line.display_subtotal_from_line" t-out="line.display_subtotal_from_line.price_subtotal" t-options="{'widget': 'monetary','display_currency':line.display_subtotal_from_line.product_id.display_currency_id or line.product_id.display_currency_id                  }"/>
-                <span class="text-nowrap" t-else="" t-out="line.price_subtotal" t-options="{                       'widget': 'monetary',                       'display_currency': o.use_custom_total and (line.product_id.display_currency_id or o.currency_id) or o.currency_id                  }"/>
+                <span class="text-nowrap" t-if="line.display_subtotal_from_line" t-out="line.display_subtotal_from_line.price_subtotal" t-options="{'widget': 'monetary','display_currency': line.display_subtotal_from_line.line_currency_id or line.line_currency_id or o.currency_id}"/>
+                <span class="text-nowrap" t-else="" t-out="line.price_subtotal" t-options="{'widget': 'monetary', 'display_currency': line.line_currency_id or o.currency_id}"/>
             </td>
         </xpath>
         <xpath expr="//span[@t-field='o.invoice_number']" position="after">

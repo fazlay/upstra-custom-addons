@@ -56,7 +56,7 @@
                                     <td class="text-end">
                                         <span t-field="line.price_subtotal" t-options="{
                       'widget': 'monetary',
-                      'display_currency': line.product_id.display_currency_id or o.currency_id
+                      'display_currency': line.line_currency_id or o.currency_id
                   }"/>
 
                                     </td>

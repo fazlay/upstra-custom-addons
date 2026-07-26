@@ -10,9 +10,10 @@
                 <page string="Custom Calculation" name="custom_calc_settings">
                     <group>
                         <field name="line_type"/>
-                        <field name="display_currency_id"/>
+                        <field name="currency_mode" widget="radio" options="{'horizontal': true}"/>
+                        <field name="display_currency_id" invisible="currency_mode != 'fixed'"/>
+                        <field name="reference_product_id" invisible="currency_mode != 'computed'"/>
                         <field name="use_custom_calc"/>
-                        display_currency_id
                         <field name="custom_calc_code" widget="ace" options="{'mode': 'python'}" invisible="not use_custom_calc"/>
                         <field name="type_code" />
                     </group>

@@ -177,6 +177,10 @@ class SaleAlternativeOfferWizard(models.TransientModel):
                         'discount': w_line.discount,
                     })
 
+        # Force recalculation of line and order amounts
+        cloned_order.order_line._compute_amount()
+        cloned_order._compute_amounts()
+
 
 class SaleAlternativeOfferWizardLineOriginal(models.TransientModel):
     _name = 'sale.alternative.offer.wizard.line.original'
