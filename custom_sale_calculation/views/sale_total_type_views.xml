@@ -22,7 +22,7 @@
                         <field name="name"/>
                         <field name="description"/>
                         <field name="active"/>
-                        <field name="total_code" widget="ace" options="{'mode': 'python'}" colspan="2"/>
+                        <field name="total_code" widget="code" options="{'mode': 'python'}" colspan="2"/>
                     </group>
                 </sheet>
             </form>
